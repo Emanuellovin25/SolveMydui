@@ -70,23 +70,23 @@ function ExitIntentPopup() {
         {submitted ? (
           <div style={{textAlign:'center',padding:'1rem 0'}}>
             <div style={{fontSize:48,marginBottom:12}}>✅</div>
-            <h2 style={{fontSize:'1.2rem',color:'#0f2238',marginBottom:8}}>Mulțumim!</h2>
-            <p style={{color:'#5a6a7a',fontSize:'0.88rem'}}>Un avocat te va contacta în maxim 2 ore.</p>
+            <h2 style={{fontSize:'1.2rem',color:'#0f2238',marginBottom:8}}>Thank you!</h2>
+            <p style={{color:'#5a6a7a',fontSize:'0.88rem'}}>An attorney will contact you within 2 hours.</p>
           </div>
         ) : (
           <>
-            <div className="exit-popup-badge">ÎNAINTE SĂ PLECI</div>
-            <h2>Estimează-ți despăgubirea gratuit — 30 secunde</h2>
-            <p>Victimele accidentelor cu șoferi beți primesc în medie <strong>$110,000–$380,000</strong>. Un avocat specializat îți evaluează cazul fără niciun cost.</p>
+            <div className="exit-popup-badge">BEFORE YOU LEAVE</div>
+            <h2>Get Your Free Settlement Estimate — 30 Seconds</h2>
+            <p>Drunk driving accident victims receive on average <strong>$110,000–$380,000</strong>. Un avocat specializat îți evaluează cazul fără niciun cost.</p>
             <div className="exit-popup-form">
               <input type="text" placeholder="Numele tău" value={name} onChange={e => setName(e.target.value)} autoFocus />
               <input type="tel" placeholder="Număr de telefon" value={phone} onChange={e => setPhone(e.target.value)} onKeyDown={e => e.key === 'Enter' && submit()} />
               <button className="exit-popup-submit" onClick={submit} disabled={!name||!phone} style={{opacity:(!name||!phone)?0.6:1}}>
-                Vreau evaluarea gratuită →
+                Get My Free Case Review →
               </button>
             </div>
-            <p className="exit-popup-disclaimer">Avocați licențiați. Informații niciodată vândute.</p>
-            <button className="exit-popup-skip" onClick={close}>Nu acum</button>
+            <p className="exit-popup-disclaimer">Licensed attorneys only. Information never sold.</p>
+            <button className="exit-popup-skip" onClick={close}>Not now</button>
           </>
         )}
       </div>
