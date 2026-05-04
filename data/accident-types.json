@@ -1,0 +1,211 @@
+{
+  "drunk-driver": {
+    "label": "Drunk Driver Settlement",
+    "slug": "drunk-driver",
+    "leadValue": "$400–$800",
+    "intent": "Victim seeking settlement value, high urgency",
+    "avgMultiplier": 1.35,
+    "calculatorFields": {
+      "bacLevel": {
+        "label": "Driver's BAC level (if known)",
+        "options": {
+          "unknown": { "label": "Unknown / not yet tested", "mult": 1.0, "punitiveNote": "Request police report — BAC is documented there" },
+          "standard": { "label": "0.08%–0.14% (legal limit to just below enhanced)", "mult": 1.2, "punitiveNote": "Standard punitive exposure" },
+          "enhanced": { "label": "0.15%–0.19% (enhanced / Extreme DUI in AZ)", "mult": 1.55, "punitiveNote": "Strong punitive damages argument — most states treat this as aggravated" },
+          "superExtreme": { "label": "0.20%+ (Super Extreme DUI in AZ / Aggravated in other states)", "mult": 1.9, "punitiveNote": "Near-automatic punitive damages in most jurisdictions. Courts view this as conscious disregard for human life." }
+        }
+      },
+      "dramShop": {
+        "label": "Was alcohol served at a bar/restaurant before the accident?",
+        "options": {
+          "unknown": { "label": "Don't know", "mult": 1.0 },
+          "no": { "label": "No — private setting", "mult": 1.0 },
+          "possible": { "label": "Possibly — driver was near bars/restaurants", "mult": 1.15 },
+          "yes": { "label": "Yes — confirmed bar or restaurant visit before crash", "mult": 1.3 }
+        }
+      },
+      "priorDui": {
+        "label": "Does the driver have prior DUI convictions? (if known)",
+        "options": {
+          "unknown": { "label": "Unknown", "mult": 1.0 },
+          "no": { "label": "First offense", "mult": 1.0 },
+          "yes": { "label": "Yes — prior DUI(s) on record", "mult": 1.4, "note": "Prior DUI record dramatically increases punitive damages in virtually every state" }
+        }
+      }
+    },
+    "level3": [
+      {
+        "slug": "night-accident",
+        "label": "Night Accident",
+        "desc": "Late-night drunk driver crash — typically between 10pm and 4am",
+        "legalNote": "Night accidents carry stronger liability arguments: reduced visibility means the standard of care for a sober driver was already elevated. Insurance adjusters know nighttime DUI cases settle higher.",
+        "avgMultiplierAdjust": 1.1
+      },
+      {
+        "slug": "freeway-crash",
+        "label": "Freeway / Highway Crash",
+        "desc": "High-speed drunk driver collision on interstate or highway",
+        "legalNote": "Highway accidents involve higher speeds = more severe injuries = higher settlements. Also, law enforcement response to highway DUI is well-documented, producing thorough police reports — good for your case.",
+        "avgMultiplierAdjust": 1.2
+      },
+      {
+        "slug": "bar-district",
+        "label": "Bar District / Entertainment Area",
+        "desc": "Accident near bars, clubs, or restaurant strips — strong dram shop potential",
+        "legalNote": "Proximity to licensed establishments builds the dram shop case. Surveillance cameras, multiple witnesses, and bar receipts are often available. This is why many attorneys specifically seek these cases — double defendant exposure.",
+        "avgMultiplierAdjust": 1.25
+      },
+      {
+        "slug": "weekend-crash",
+        "label": "Weekend DUI Crash",
+        "desc": "Friday–Sunday drunk driving accident — statistically higher BAC periods",
+        "legalNote": "NHTSA data shows weekend DUI crashes are 2.3x more likely to involve BAC ≥ 0.15%. Higher BAC = stronger punitive damages argument. Weekend crashes are also easier to reconstruct — more foot traffic, more witnesses.",
+        "avgMultiplierAdjust": 1.1
+      },
+      {
+        "slug": "driver-fled",
+        "label": "Driver Fled Scene",
+        "desc": "Drunk driver left the scene after the accident — hit and run DUI",
+        "legalNote": "Fleeing a DUI accident is a separate felony in all 8 states. This compounds liability dramatically — the act of fleeing demonstrates consciousness of guilt and is powerful punitive damages evidence. The criminal case for fleeing strengthens the civil case.",
+        "avgMultiplierAdjust": 1.35
+      },
+      {
+        "slug": "wrong-way",
+        "label": "Wrong-Way Driver",
+        "desc": "Drunk driver traveling the wrong direction — head-on collision risk",
+        "legalNote": "Wrong-way driving is one of the clearest indicators of severe impairment. The National Transportation Safety Board links 60–75% of wrong-way crashes to driver impairment. These cases rarely go to trial — insurers know they will lose badly.",
+        "avgMultiplierAdjust": 1.45
+      },
+      {
+        "slug": "red-light",
+        "label": "Ran Red Light",
+        "desc": "Drunk driver ran a traffic signal — intersection collision",
+        "legalNote": "Red light violations by an intoxicated driver create nearly airtight liability. Traffic camera footage is often available. The combination of DUI + traffic violation leaves no room for comparative fault arguments against you.",
+        "avgMultiplierAdjust": 1.15
+      },
+      {
+        "slug": "rear-end",
+        "label": "Rear-End Collision",
+        "desc": "Drunk driver struck you from behind — clear liability, whiplash common",
+        "legalNote": "Rear-end collisions carry a strong presumption of fault for the striking driver under the law in all 8 states. Combined with DUI, liability is essentially undisputed. The main battle is about damages, not fault — which means higher settlements.",
+        "avgMultiplierAdjust": 1.0
+      },
+      {
+        "slug": "uber-lyft-dui",
+        "label": "Rideshare Driver DUI",
+        "desc": "The drunk driver was operating an Uber, Lyft, or other rideshare vehicle",
+        "legalNote": "A DUI while driving for a rideshare creates layered liability: the driver personally, the rideshare company's insurance (which can reach $1M per incident while the app is active), and potentially the rideshare platform for negligent hiring. Three possible defendants.",
+        "avgMultiplierAdjust": 1.5
+      },
+      {
+        "slug": "commercial-vehicle",
+        "label": "Commercial Driver DUI",
+        "desc": "The drunk driver was operating a commercial truck, van, or company vehicle",
+        "legalNote": "Commercial drivers are held to a higher standard — 0.04% BAC limit under federal law. A commercial driver at 0.08%+ is doubly in violation. The employer and company are often co-defendants. Commercial insurance policies carry much higher limits.",
+        "avgMultiplierAdjust": 1.6
+      }
+    ],
+    "timelineSpecific": {
+      "hour1": "Call 911 immediately and remain at the scene. Do NOT confront the impaired driver — they are unpredictable. When police arrive, make sure they administer a field sobriety test and/or breathalyzer. Get the officer's name and badge number. Request the police report number before you leave — DUI reports are public record and become your strongest evidence.",
+      "day1": "Request the police report within 24 hours if possible — many jurisdictions allow same-day access. The report will document BAC results, field sobriety test observations, and the officer's impairment findings. This document is the foundation of your civil case. Also photograph all injuries while they're fresh — bruising and swelling peak at 24–72 hours.",
+      "week1": "Understand that DUI cases run on two parallel tracks: criminal and civil. The criminal prosecution runs separately from your civil injury claim — you don't control the criminal case, but a DUI conviction in criminal court is near-automatic proof of liability in your civil case. Don't discuss your claim with the other driver's insurance company without an attorney.",
+      "month1": "Insurance companies move fast on DUI cases — but not in your favor. They'll either offer a quick lowball settlement hoping you don't know what punitive damages are, or they'll stall until you're desperate. Punitive damages may be available in your state, and they can be 2–4x the base settlement. The insurer knows this. You should too.",
+      "month3": "Punitive damages in drunk driver cases are calculated separately from your actual damages (medical bills, lost wages, pain and suffering). If the driver had a BAC significantly above the legal limit, prior DUI history, or if they fled the scene, punitive exposure increases substantially. Your state's specific rules determine the cap — if any — on these awards."
+    }
+  },
+  "enhanced-bac": {
+    "label": "High BAC / Extreme DUI Settlement",
+    "slug": "extreme-dui",
+    "leadValue": "$600–$1,200",
+    "intent": "Victim of severely impaired driver — strongest case type",
+    "avgMultiplier": 1.9,
+    "level3": [
+      {
+        "slug": "bac-015-019",
+        "label": "BAC 0.15%–0.19% (Extreme DUI)",
+        "desc": "Driver tested at enhanced BAC threshold — strong punitive exposure",
+        "legalNote": "At this level, impairment is severe and well-documented. Most state courts treat this as sufficient evidence of conscious disregard for others' safety — the legal standard for punitive damages.",
+        "avgMultiplierAdjust": 1.3
+      },
+      {
+        "slug": "bac-020-plus",
+        "label": "BAC 0.20%+ (Super Extreme / Aggravated DUI)",
+        "desc": "Driver tested at 2.5x or more over the legal limit",
+        "legalNote": "At 0.20%+ BAC, a driver's cognitive function is severely degraded. Courts and juries respond powerfully to these numbers. Punitive damages in this range are nearly automatic if injuries occurred.",
+        "avgMultiplierAdjust": 1.6
+      },
+      {
+        "slug": "prior-dui-record",
+        "label": "Driver Had Prior DUI Conviction",
+        "desc": "Repeat DUI offender who injured you while intoxicated again",
+        "legalNote": "Prior DUI conviction is one of the strongest punitive damages arguments available. It demonstrates that the driver was aware of the risk, had already been criminally punished, and chose to repeat the behavior anyway.",
+        "avgMultiplierAdjust": 1.5
+      },
+      {
+        "slug": "child-in-vehicle",
+        "label": "Child in Vehicle During DUI Crash",
+        "desc": "Minor(s) present in either vehicle during the drunk driving accident",
+        "legalNote": "The presence of children creates additional claims and dramatically affects jury sentiment. Driving drunk with children present is a separate criminal charge in most states — this bolsters punitive damages significantly.",
+        "avgMultiplierAdjust": 1.4
+      },
+      {
+        "slug": "dui-fatality-survivor",
+        "label": "Wrongful Death — Drunk Driver",
+        "desc": "Fatal DUI crash — family member killed by drunk driver",
+        "legalNote": "Wrongful death claims have separate legal standing in all states. Economic damages include lifetime earnings, plus non-economic damages for loss of companionship. Punitive damages available and often substantial. These cases resolve for $500,000–$5M+ regularly.",
+        "avgMultiplierAdjust": 2.5
+      }
+    ],
+    "timelineSpecific": {
+      "hour1": "Preserve the BAC evidence — the police report will document the result, but get the report number immediately. If the driver was arrested at the scene, request the arrest record through public records within 24 hours. A BAC of 0.15%+ at arrest creates near-automatic liability in civil court.",
+      "day1": "Begin documenting every medical expense from day one. In high-BAC cases, attorneys work on contingency — no upfront cost — and they pursue punitive damages aggressively because the evidence is strong. The criminal case enhances yours: plead guilty on DUI = admission of intoxication = your civil case just became much easier.",
+      "week1": "Request the driver's full driving record through your attorney. A prior DUI on record transforms the punitive damages calculation. Most insurance policies have limits — but in enhanced BAC cases, your attorney may pierce those limits through punitive damages or umbrella policy claims.",
+      "month1": "High-BAC cases rarely go to trial. The risk to the defense is too great — a jury presented with a 0.20%+ BAC driver who injured someone will award punitives. Most high-BAC cases settle within 6–12 months for amounts well above policy limits, requiring negotiation of personal assets.",
+      "month3": "The criminal proceeding timeline matters here. If the driver is convicted — which happens in 95%+ of high-BAC cases — that conviction is admissible in your civil case as proof of fault. Many civil attorneys time their demand letters to coincide with the criminal guilty plea for maximum leverage."
+    }
+  },
+  "dram-shop": {
+    "label": "Bar / Restaurant Liable — Dram Shop Claim",
+    "slug": "dram-shop",
+    "leadValue": "$500–$1,000",
+    "intent": "Victim exploring whether the establishment that served the driver shares liability",
+    "avgMultiplier": 1.45,
+    "level3": [
+      {
+        "slug": "bar-served-visibly-drunk",
+        "label": "Bar Served Visibly Drunk Driver",
+        "desc": "Establishment served the drunk driver despite obvious signs of intoxication",
+        "legalNote": "This is the core dram shop claim. Evidence includes: bar receipts showing multiple orders, surveillance footage, witness testimony about the driver's behavior at the bar, credit card records showing order timing, and social media posts.",
+        "avgMultiplierAdjust": 1.2
+      },
+      {
+        "slug": "restaurant-served-minor",
+        "label": "Driver Was a Minor — Served Alcohol Illegally",
+        "desc": "Underage driver was served alcohol by a licensed establishment",
+        "legalNote": "Serving alcohol to a minor is the cleanest dram shop case in every state. There's no 'visibly intoxicated' standard to argue — serving a minor is per se illegal. Liability is substantially easier to establish, and settlements are typically higher.",
+        "avgMultiplierAdjust": 1.4
+      },
+      {
+        "slug": "multiple-bars",
+        "label": "Multiple Establishments — Bar Hopping Before Crash",
+        "desc": "Driver visited multiple bars or restaurants before the accident",
+        "legalNote": "Multiple establishments create multiple potential dram shop defendants. Each can be apportioned liability. Credit card records, bar stamps, and witness accounts build the timeline. The last establishment served is the primary target — but all contribute.",
+        "avgMultiplierAdjust": 1.3
+      },
+      {
+        "slug": "social-host-liability",
+        "label": "Party Host Served Driver (Social Host Liability)",
+        "desc": "Driver was served alcohol at a private party before the crash",
+        "legalNote": "Social host liability varies significantly by state: NY (strong), TX (available), CA (limited to minors). If the host served alcohol knowing the person would drive, liability is possible. This applies to house parties, work events, and weddings.",
+        "avgMultiplierAdjust": 0.9
+      }
+    ],
+    "timelineSpecific": {
+      "hour1": "The bar evidence disappears fast. Surveillance footage is typically overwritten in 24–72 hours. Bar receipts are in their system now. Your attorney needs a preservation letter sent to any establishment the driver visited within 24 hours — or the evidence is gone.",
+      "day1": "File a public records request for any surveillance footage from public cameras near the establishment. Identify potential witnesses — bartenders, other patrons, bouncers. The driver's credit card and phone records can show the timeline. Act now.",
+      "week1": "Understand that dram shop cases run parallel to the drunk driver case. You file against both. The establishment's insurance carrier (liquor liability policy) is separate from the driver's auto insurance. Two insurance companies. Two policy limits. Two sources of potential recovery.",
+      "month1": "Establishments fight dram shop claims aggressively because their liquor license is at risk. Expect them to claim the driver didn't appear drunk, or that they refused further service. Your evidence — receipts, surveillance, and blood alcohol timeline — tells the objective story.",
+      "month3": "Dram shop cases typically add 3–6 months to the overall settlement timeline because you're dealing with a second defendant and their separate insurance. But the added recovery is usually substantial. Patience pays — these cases resolve for significantly more than driver-only cases."
+    }
+  }
+}

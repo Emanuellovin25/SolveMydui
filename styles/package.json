@@ -1,0 +1,27 @@
+{
+  "name": "drunk-driver-settlement",
+  "version": "4.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "postbuild": "next-sitemap",
+    "generate": "node lib/generate.js",
+    "matrix": "node lib/matrix.js",
+    "dry-run": "node lib/generate.js --state TX --level all --limit 3 --dry",
+    "publish-day": "node lib/safe-publish.js --state TX --auto",
+    "safety-check": "node lib/safety-check.js",
+    "sitemap-submit": "node lib/sitemap-submit.js --ping",
+    "deploy": "npm run build && vercel deploy && node lib/sitemap-submit.js --ping",
+    "daily": "node lib/safe-publish.js --state TX --auto && node lib/safety-check.js && npm run deploy"
+  },
+  "dependencies": {
+    "next": "14.2.3",
+    "react": "^18",
+    "react-dom": "^18",
+    "next-seo": "^6.5.0",
+    "next-sitemap": "^4.2.3",
+    "@vercel/kv": "^1.0.1"
+  }
+}
