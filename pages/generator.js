@@ -77,9 +77,21 @@ const TONES = [
 ]
 
 const ACCIDENT_TYPES = [
-  { id: 'drunk-driver', label: 'Drunk Driver Settlement' },
-  { id: 'enhanced-bac', label: 'High BAC / Extreme DUI' },
-  { id: 'dram-shop', label: 'Dram Shop / Bar Liable' },
+  { id: 'drunk-driver', label: 'Drunk Driver Settlement', desc: 'Pagini generale accident DUI' },
+  { id: 'enhanced-bac', label: 'High BAC / Extreme DUI', desc: 'BAC ridicat, daune punitive' },
+  { id: 'dram-shop', label: 'Dram Shop / Bar Liable', desc: 'Responsabilitate bar/restaurant' },
+  { id: 'wrongful-death', label: 'Wrongful Death — Drunk Driver', desc: 'Deces cauzat de șofer beat' },
+  { id: 'pedestrian-drunk-driver', label: 'Pedestrian Hit by Drunk Driver', desc: 'Pieton lovit de șofer beat' },
+  { id: 'hit-and-run-dui', label: 'Hit and Run — DUI Suspect', desc: 'Fugă de la locul accidentului' },
+  { id: 'minor-injured-drunk-driver', label: 'Minor Injured by Drunk Driver', desc: 'Copil rănit de șofer beat' },
+]
+
+// 4 custom accident fields (editable by user)
+const DEFAULT_CUSTOM_ACCIDENTS = [
+  { id: 'custom-1', label: 'Motorcycle DUI Accident', desc: '' },
+  { id: 'custom-2', label: 'Commercial Vehicle DUI', desc: '' },
+  { id: 'custom-3', label: 'DUI — Rear End Collision', desc: '' },
+  { id: 'custom-4', label: 'DUI — Multiple Vehicles', desc: '' },
 ]
 
 const LEVELS = [
@@ -97,6 +109,7 @@ export default function Generator() {
   const [selectedCities, setSelectedCities] = useState([])
   const [selectedTone, setSelectedTone] = useState('empathetic')
   const [selectedAccidents, setSelectedAccidents] = useState(['drunk-driver'])
+  const [customAccidents, setCustomAccidents] = useState(DEFAULT_CUSTOM_ACCIDENTS)
   const [selectedLevel, setSelectedLevel] = useState('2')
   const [keywords, setKeywords] = useState('')
   const [pageLimit, setPageLimit] = useState(10)
@@ -135,7 +148,14 @@ export default function Generator() {
             selectedState,
             selectedCities,
             selectedTone,
-            selectedAccidents,
+            selectedAccidents: [
+              ...selectedAccidents,
+              ...customAccidents.filter(a => selectedAccidents.includes(a.id)).map(a => a.id)
+            ],
+            accidentLabels: {
+              ...Object.fromEntries(ACCIDENT_TYPES.map(a => [a.id, a.label])),
+              ...Object.fromEntries(customAccidents.map(a => [a.id, a.label]))
+            },
             selectedLevel,
             keywords,
             pageLimit,
@@ -289,16 +309,47 @@ export default function Generator() {
               </div>
 
               <div style={s.section}>
-                <div style={s.label}>Tip accident</div>
+                <div style={s.label}>Tip accident — predefinite</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   {ACCIDENT_TYPES.map(a => (
                     <button key={a.id} onClick={() => toggleAccident(a.id)}
                       style={{ ...s.card, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', ...(selectedAccidents.includes(a.id) ? s.cardOn : {}) }}>
-                      <span style={{ color: '#e2e8f0', fontWeight: 600, fontSize: '0.85rem' }}>{a.label}</span>
-                      {selectedAccidents.includes(a.id) && <span style={{ color: '#f59e0b', fontSize: '0.8rem' }}>✓ selectat</span>}
+                      <div>
+                        <span style={{ color: '#e2e8f0', fontWeight: 600, fontSize: '0.85rem' }}>{a.label}</span>
+                        {a.desc && <span style={{ color: '#64748b', fontSize: '0.72rem', marginLeft: 8 }}>{a.desc}</span>}
+                      </div>
+                      {selectedAccidents.includes(a.id) && <span style={{ color: '#f59e0b', fontSize: '0.8rem', flexShrink: 0 }}>✓</span>}
                     </button>
                   ))}
                 </div>
+              </div>
+
+              <div style={s.section}>
+                <div style={s.label}>Tipuri custom <span style={{ color: '#475569', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(editează și selectează)</span></div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {customAccidents.map((a, idx) => (
+                    <div key={a.id} style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                      <button onClick={() => toggleAccident(a.id)}
+                        style={{ ...s.card, flexDirection: 'row', alignItems: 'center', flex: 1, padding: '0.5rem 0.75rem', ...(selectedAccidents.includes(a.id) ? s.cardOn : {}) }}>
+                        {selectedAccidents.includes(a.id) && <span style={{ color: '#f59e0b', marginRight: 6, fontSize: '0.8rem' }}>✓</span>}
+                        <input
+                          type="text"
+                          value={a.label}
+                          onChange={e => {
+                            e.stopPropagation()
+                            const updated = [...customAccidents]
+                            updated[idx] = { ...updated[idx], label: e.target.value }
+                            setCustomAccidents(updated)
+                          }}
+                          onClick={e => e.stopPropagation()}
+                          style={{ background: 'none', border: 'none', color: '#e2e8f0', fontSize: '0.85rem', fontWeight: 600, flex: 1, outline: 'none', cursor: 'text', fontFamily: "'Syne', sans-serif" }}
+                          placeholder="Nume tip accident..."
+                        />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <p style={{ color: '#334155', fontSize: '0.75rem', marginTop: 8 }}>Click pe text pentru a edita. Click pe card pentru a selecta/deselecta.</p>
               </div>
 
               <div style={s.section}>

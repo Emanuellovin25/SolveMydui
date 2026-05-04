@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { NextSeo } from 'next-seo'
 import Link from 'next/link'
 import statesData from '../data/states.json'
@@ -13,6 +14,7 @@ function slugify(s) {
 }
 
 export default function StatePage({ stateInfo, stateCode, cityPages, accidentTypes, stats }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   if (!stateInfo) return null
 
   const jsonLd = {
@@ -65,8 +67,17 @@ export default function StatePage({ stateInfo, stateCode, cityPages, accidentTyp
             <a href="/about">About</a>
           </nav>
           <a href="#lead-form" className="header-cta">Free Case Review</a>
+          <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(o => !o)} aria-label="Menu">☰</button>
         </div>
+        {mobileMenuOpen && (
+          <nav className="mobile-nav open">
+            <a href="/methodology" onClick={() => setMobileMenuOpen(false)}>How It Works</a>
+            <a href="/about" onClick={() => setMobileMenuOpen(false)}>About</a>
+            <a href="#lead-form" onClick={() => setMobileMenuOpen(false)}>Free Case Review</a>
+          </nav>
+        )}
       </header>
+      <a href="#lead-form" className="sticky-cta">📞 Free Case Review — No Fee Unless You Win</a>
 
       <main>
         <div className="container">

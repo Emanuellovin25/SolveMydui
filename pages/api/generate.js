@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   if (!githubToken) return res.status(500).json({ error: 'GITHUB_TOKEN lipsă din environment variables' })
   if (!anthropicKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY lipsă din environment variables' })
 
-  const { selectedState, selectedCities, selectedTone, selectedAccidents, selectedLevel, keywords, pageLimit, statesMetaName } = config
+  const { selectedState, selectedCities, selectedTone, selectedAccidents, selectedLevel, keywords, pageLimit, statesMetaName, accidentLabels: customLabels } = config
 
   const TONES = {
     empathetic: 'Warm, empathetic, focused on victim recovery and healing',
@@ -66,7 +66,7 @@ export default async function handler(req, res) {
         // Skip if already exists
         if (existingPages.find(p => p.slug === slug)) continue
 
-        const accidentLabel = ACCIDENT_LABELS[accidentId] || accidentId
+        const accidentLabel = (customLabels && customLabels[accidentId]) || ACCIDENT_LABELS[accidentId] || accidentId
 
         const prompt = `You are an expert legal content writer for a drunk driver settlement calculator website.
 
