@@ -335,8 +335,8 @@ export default function Scheduler() {
 
   async function loadEntries() {
     setLoading(true)
-    const today = new Date().toISOString().split('T')[0]
-    const future = new Date(Date.now() + 90 * 24 * 3600 * 1000).toISOString().split('T')[0]
+    const today = new Date().toISOString().split("T")[0]
+    const d = new Date(); d.setDate(d.getDate() + 90); const future = d.toISOString().split("T")[0]
     try {
       const res = await fetch('/api/scheduler', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
