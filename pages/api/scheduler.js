@@ -1,6 +1,7 @@
 /**
  * /api/scheduler — Manages the pre-calculated publishing schedule
  * Uses KV_REST_API_URL / KV_REST_API_TOKEN (Upstash Redis via Vercel KV)
+ * v2 — parallel Redis calls to avoid timeout
  */
 
 const KV_URL = process.env.KV_REST_API_URL
@@ -30,6 +31,20 @@ async function kvDel(key) {
   })
 }
 
+// Fetch all chunks in parallel
+async function getAllChunks(meta) {
+  const promises = []
+  for (let i = 0; i < meta.chunks; i++) {
+    promises.push(kvGet(`schedule:chunk:${i}`))
+  }
+  const results = await Promise.all(promises)
+  const all = []
+  for (const chunk of results) {
+    if (chunk) for (const entry of chunk) all.push(entry)
+  }
+  return all
+}
+
 export default async function handler(req, res) {
   // Auth
   const { password } = req.body || req.query
@@ -43,12 +58,19 @@ export default async function handler(req, res) {
   if (action === 'init') {
     try {
       const schedule = require('../../data/schedule.json')
-      // Store as chunks of 10 entries to stay under 5MB KV limit
       const CHUNK = 10
       const chunks = Math.ceil(schedule.length / CHUNK)
-      for (let i = 0; i < chunks; i++) {
-        await kvSet(`schedule:chunk:${i}`, schedule.slice(i * CHUNK, (i + 1) * CHUNK))
+
+      // Save chunks in parallel batches of 5 to avoid rate limits
+      const BATCH = 5
+      for (let b = 0; b < chunks; b += BATCH) {
+        const batch = []
+        for (let i = b; i < Math.min(b + BATCH, chunks); i++) {
+          batch.push(kvSet(`schedule:chunk:${i}`, schedule.slice(i * CHUNK, (i + 1) * CHUNK)))
+        }
+        await Promise.all(batch)
       }
+
       await kvSet('schedule:meta', { total: schedule.length, chunks, initialized: new Date().toISOString() })
       return res.json({ success: true, total: schedule.length, chunks })
     } catch (e) {
@@ -63,19 +85,15 @@ export default async function handler(req, res) {
       const meta = await kvGet('schedule:meta')
       if (!meta) return res.json({ entries: [] })
 
-      const entries = []
-      for (let i = 0; i < meta.chunks; i++) {
-        const chunk = await kvGet(`schedule:chunk:${i}`)
-        if (chunk) {
-          for (const entry of chunk) {
-            if ((!from || entry.date >= from) && (!to || entry.date <= to)) {
-              entries.push(entry)
-            }
-          }
-        }
-      }
-      entries.sort((a, b) => a.date.localeCompare(b.date))
-      return res.json({ entries: entries.slice(0, 60) }) // max 60 entries
+      // Fetch all chunks in parallel
+      const all = await getAllChunks(meta)
+
+      const entries = all
+        .filter(e => (!from || e.date >= from) && (!to || e.date <= to))
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .slice(0, 60)
+
+      return res.json({ entries })
     } catch (e) {
       return res.status(500).json({ error: e.message })
     }
@@ -88,8 +106,15 @@ export default async function handler(req, res) {
       const meta = await kvGet('schedule:meta')
       if (!meta) return res.status(404).json({ error: 'Schedule not initialized' })
 
+      // Fetch all chunks in parallel, find and update
+      const promises = []
       for (let i = 0; i < meta.chunks; i++) {
-        const chunk = await kvGet(`schedule:chunk:${i}`)
+        promises.push(kvGet(`schedule:chunk:${i}`))
+      }
+      const chunks = await Promise.all(promises)
+
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i]
         if (!chunk) continue
         const idx = chunk.findIndex(e => e.date === entry.date && e.stateCode === entry.stateCode && e.level === entry.level)
         if (idx !== -1) {
@@ -193,7 +218,6 @@ No markdown, no code blocks, raw JSON only.`
       }
 
       if (newPages.length === 0) {
-        // Mark as published anyway (all existed)
         await markPublished(entry, 0)
         return res.json({ success: true, generated: 0, message: 'All pages already existed' })
       }
@@ -215,7 +239,6 @@ No markdown, no code blocks, raw JSON only.`
         throw new Error(err.message)
       }
 
-      // Mark entry as published in KV
       await markPublished(entry, newPages.length)
 
       return res.json({ success: true, generated: newPages.length, slugs: newPages.map(p => p.slug) })
@@ -226,8 +249,13 @@ No markdown, no code blocks, raw JSON only.`
     async function markPublished(entry, count) {
       const meta = await kvGet('schedule:meta')
       if (!meta) return
+      const promises = []
       for (let i = 0; i < meta.chunks; i++) {
-        const chunk = await kvGet(`schedule:chunk:${i}`)
+        promises.push(kvGet(`schedule:chunk:${i}`))
+      }
+      const chunks = await Promise.all(promises)
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i]
         if (!chunk) continue
         const idx = chunk.findIndex(e => e.date === entry.date && e.stateCode === entry.stateCode && e.level === entry.level)
         if (idx !== -1) {
