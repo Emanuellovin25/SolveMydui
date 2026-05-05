@@ -77,10 +77,10 @@ function ExitIntentPopup() {
           <>
             <div className="exit-popup-badge">BEFORE YOU LEAVE</div>
             <h2>Get Your Free Settlement Estimate — 30 Seconds</h2>
-            <p>Drunk driving accident victims receive on average <strong>$110,000–$380,000</strong>. Un avocat specializat îți evaluează cazul fără niciun cost.</p>
+            <p>Drunk driving accident victims receive on average <strong>$110,000–$380,000</strong>. A specialized attorney evaluates your case at no cost.</p>
             <div className="exit-popup-form">
-              <input type="text" placeholder="Numele tău" value={name} onChange={e => setName(e.target.value)} autoFocus />
-              <input type="tel" placeholder="Număr de telefon" value={phone} onChange={e => setPhone(e.target.value)} onKeyDown={e => e.key === 'Enter' && submit()} />
+              <input type="text" placeholder="Your name" value={name} onChange={e => setName(e.target.value)} autoFocus />
+              <input type="tel" placeholder="Phone number" value={phone} onChange={e => setPhone(e.target.value)} onKeyDown={e => e.key === 'Enter' && submit()} />
               <button className="exit-popup-submit" onClick={submit} disabled={!name||!phone} style={{opacity:(!name||!phone)?0.6:1}}>
                 Get My Free Case Review →
               </button>
