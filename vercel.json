@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "pages/api/scheduler.js": {
+      "maxDuration": 60
+    },
+    "pages/api/generate.js": {
+      "maxDuration": 60
+    }
+  }
+}
