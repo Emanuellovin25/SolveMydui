@@ -604,7 +604,7 @@ export default function StatePage({ stateInfo, stateCode, accidentTypes }) {
 }
 
 export async function getStaticProps({ params }) {
-  const { slug } = params
+  const slug = params.state
   const stateCode = Object.keys(statesData).find(k => statesData[k].slug === slug)
   if (!stateCode) return { notFound: true }
   const deployedState = process.env.SITE_STATE
@@ -618,6 +618,7 @@ export async function getStaticPaths() {
   const deployedState = process.env.SITE_STATE
   const paths = Object.entries(statesData)
     .filter(([code]) => !deployedState || deployedState === 'ALL' || code === deployedState)
-    .map(([, state]) => ({ params: { slug: state.slug } }))
+    .filter(([, state]) => state && state.slug)
+    .map(([, state]) => ({ params: { state: state.slug } }))
   return { paths, fallback: false }
 }
